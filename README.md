@@ -1,20 +1,28 @@
 # kysely-bun-sql
 
-A Kysely dialect driver for Bun's native SQL runtime, providing support for PostgreSQL, MySQL, and SQLite databases.
+A Kysely dialect driver for Bun's native SQL runtime, providing type-safe database access for PostgreSQL, MySQL, and SQLite databases.
+
+## What is this package?
+
+`kysely-bun-sql` is a Kysely dialect that integrates with Bun's native SQL runtime. It allows you to use Kysely's powerful type-safe query builder with Bun's built-in database support, eliminating the need for external Node.js database drivers. This package automatically detects your database type from the connection string and provides a unified API across PostgreSQL, MySQL, and SQLite.
 
 ## Features
 
-- **Native Bun SQL Runtime**: Uses Bun's built-in SQL client instead of Node.js database drivers
+- **Native Bun SQL Runtime**: Uses Bun's built-in SQL client instead of external Node.js database drivers
 - **Multi-Database Support**: PostgreSQL, MySQL, and SQLite through a unified API
 - **Automatic Detection**: Database type is automatically detected based on connection string
 - **Connection Pooling**: Built-in connection pooling managed by Bun
-- **Transactions**: Full transaction support with `begin`, `commit`, and `rollback`
+- **Transactions**: Full transaction support with isolation levels and access modes
 - **Type-Safe Queries**: Full TypeScript support with Kysely's type system
+- **CRUD Operations**: Complete support for Create, Read, Update, and Delete operations
+- **Schema Operations**: Full schema manipulation support (create/drop tables, columns, etc.)
+- **Introspection**: Database introspection capabilities to discover tables and schema information
 
 ## Installation
 
 ```bash
-bun add kysely kysely-bun-sql
+bun install https://github.com/karlrobeck/kysely-bun-sql
+bun add kysely
 ```
 
 ## Quick Start
@@ -22,7 +30,7 @@ bun add kysely kysely-bun-sql
 ### PostgreSQL Example
 
 ```typescript
-import { Kysely, sql } from "kysely";
+import { Kysely } from "kysely";
 import { BunSQLDialect } from "kysely-bun-sql";
 import { SQL } from "bun";
 
@@ -193,21 +201,45 @@ All standard Kysely operations are supported:
 
 ## Limitations
 
-- **Streaming Queries**: The `streamQuery` method is not yet fully supported by Bun's SQL API. Queries are executed and all results are returned at once.
-- **Introspection**: Uses PostgreSQL's introspection system. For MySQL and SQLite, introspection features may be limited.
-- **Advanced Features**: Some database-specific features (like PostgreSQL's `LISTEN`/`NOTIFY`) are not available through Bun's SQL API.
+- **Streaming Queries**: Bun's SQL API does not support streaming. All query results are fetched and returned at once, which may have memory implications for very large result sets.
+  
+- **Database-Specific Features**: The following database-specific features are not available through Bun's SQL API:
+  - PostgreSQL: `LISTEN`/`NOTIFY`, cursors, arrays, JSON operators
+  - MySQL: full-text search (FTS)
+  - SQLite: Some extension functions and advanced features
+  
+- **Introspection Limitations**: 
+  - Database introspection uses standard SQL information schema queries
+  - For best results, use with PostgreSQL (primary test target)
+  - MySQL and SQLite introspection may have limitations due to schema access differences
+  
+- **Dynamic SQL**: Queries with dynamic SQL require using Bun's `unsafe()` method, which must be used with caution when working with user input
+  
+- **Connection Management**: Connection pooling and pool configuration are entirely managed by Bun and cannot be customized through the dialect options
+  
+- **Runtime Requirements**: Requires Bun runtime - cannot be used with Node.js
 
 ## Supported Query Types
 
+**Legend:**
+- ✅ = Tested and verified
+- ❌ = Not supported
+- ❓ = Not tested
+
 - ✅ SELECT
-- ✅ INSERT (with RETURNING for PostgreSQL)
+- ✅ INSERT (with RETURNING for PostgreSQL and MySQL)
 - ✅ UPDATE
 - ✅ DELETE
-- ✅ Basic transactions
+- ✅ Basic transactions (BEGIN/COMMIT/ROLLBACK)
+- ✅ Transaction isolation levels
 - ✅ Parameters and parameterized queries
-- ✅ Connection pooling
+- ✅ Connection pooling (managed by Bun)
+- ✅ Schema operations (CREATE/DROP TABLE, columns, indexes)
+- ✅ Database introspection (getTables, getColumns, etc.)
 - ❌ Streaming results
-- ❌ Complex joins with raw SQL in some cases
+- ❌ Cursors
+- ❓ Database-specific advanced features
+- ❓ Complex joins with raw SQL in some cases
 
 ## Type Safety
 
