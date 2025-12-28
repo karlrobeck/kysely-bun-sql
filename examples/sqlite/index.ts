@@ -1,1 +1,1 @@
-console.log("Hello via Bun!");
+import { BunSQLDialect } from "@karlrobeck/kysely-bun-sql/index.ts";
