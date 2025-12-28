@@ -21,7 +21,7 @@ interface PostTable {
 	id: Generated<number>;
 	userId: number;
 	title: string;
-	content: string;
+	content?: string;
 	createdAt: Generated<string>;
 }
 
@@ -581,6 +581,108 @@ describe("Bun SQL Driver Integration Tests", () => {
 
 			expect(users.length).toBe(1);
 			expect(users[0]?.name).toBe("Jane Smith");
+		});
+
+		it("should perform INNER JOIN with Kysely API", async () => {
+			// Create posts table
+			await db.schema
+				.createTable("posts")
+				.addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+				.addColumn("userId", "integer", (col) => col.notNull())
+				.addColumn("title", "text", (col) => col.notNull())
+				.addColumn("content", "text")
+				.execute();
+
+			// Insert posts
+			await db
+				.insertInto("posts")
+				.values([
+					{ userId: 1, title: "First Post", content: "Content 1" },
+					{ userId: 1, title: "Second Post", content: "Content 2" },
+					{ userId: 2, title: "Jane's Post", content: "Content 3" },
+				])
+				.execute();
+
+			// Perform join
+			const result = await db
+				.selectFrom("users")
+				.innerJoin("posts", (join) =>
+					join.onRef("users.id", "=", "posts.userId"),
+				)
+				.select(["users.id", "users.name", "posts.title"])
+				.execute();
+
+			expect(result.length).toBe(3);
+			expect(result[0]?.name).toBe("John Doe");
+			expect(result[0]?.title).toBe("First Post");
+		});
+
+		it("should perform JOIN with raw SQL", async () => {
+			// Create posts table
+			await db.schema
+				.createTable("posts")
+				.addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+				.addColumn("userId", "integer", (col) => col.notNull())
+				.addColumn("title", "text", (col) => col.notNull())
+				.execute();
+
+			// Insert posts
+			await db
+				.insertInto("posts")
+				.values([
+					{ userId: 1, title: "First Post" },
+					{ userId: 2, title: "Jane's Post" },
+				])
+				.execute();
+
+			// Perform join with raw SQL
+			const result = await sql<{
+				userId: number;
+				name: string;
+				title: string;
+			}>`
+				SELECT u.id as userId, u.name, p.title
+				FROM users u
+				INNER JOIN posts p ON u.id = p.userId
+				ORDER BY u.id
+			`.execute(db);
+
+			expect(result.rows.length).toBe(2);
+			expect(result.rows[0]?.name).toBe("John Doe");
+			expect(result.rows[0]?.title).toBe("First Post");
+			expect(result.rows[1]?.name).toBe("Jane Smith");
+		});
+
+		it("should perform LEFT JOIN with raw SQL", async () => {
+			// Create posts table
+			await db.schema
+				.createTable("posts")
+				.addColumn("id", "integer", (col) => col.primaryKey().autoIncrement())
+				.addColumn("userId", "integer", (col) => col.notNull())
+				.addColumn("title", "text", (col) => col.notNull())
+				.execute();
+
+			// Insert posts (only for user 1)
+			await db
+				.insertInto("posts")
+				.values({ userId: 1, title: "John's Post" })
+				.execute();
+
+			// Perform left join with raw SQL
+			const result = await sql<{
+				userId: number;
+				name: string;
+				title: string | null;
+			}>`
+				SELECT u.id as userId, u.name, p.title
+				FROM users u
+				LEFT JOIN posts p ON u.id = p.userId
+				ORDER BY u.id
+			`.execute(db);
+
+			expect(result.rows.length).toBe(2);
+			expect(result.rows[0]?.title).toBe("John's Post");
+			expect(result.rows[1]?.title).toBeNull();
 		});
 	});
 

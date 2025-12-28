@@ -236,10 +236,10 @@ All standard Kysely operations are supported:
 - ✅ Connection pooling (managed by Bun)
 - ✅ Schema operations (CREATE/DROP TABLE, columns, indexes)
 - ✅ Database introspection (getTables, getColumns, etc.)
+- ✅ Complex joins with raw SQL in some cases
 - ❌ Streaming results
 - ❌ Cursors
 - ❓ Database-specific advanced features
-- ❓ Complex joins with raw SQL in some cases
 
 ## Type Safety
 
