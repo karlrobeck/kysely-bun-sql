@@ -312,9 +312,9 @@ bunx biome lint --fix src/
 
 ## References
 
-- [Bun SQL Documentation](https://bun.com/docs/runtime/sql.md)
+- [Bun SQL Documentation](https://bun.com/docs/runtime/sql)
 - [Kysely Documentation](https://kysely.dev)
-- [PostgreSQL Driver Example](https://github.com/kysely-org/kysely/blob/main/src/dialect/postgres/postgres-driver.ts)
+- [PostgreSQL Driver Example](https://github.com/kysely-org/kysely/blob/master/src/dialect/postgres/postgres-driver.ts)
 
 ## License
 
