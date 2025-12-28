@@ -1,0 +1,12 @@
+.git
+.gitignore
+.github
+.editorconfig
+node_modules
+bun.lock
+src
+tests
+examples
+tsconfig.json
+biome.json
+.vscode

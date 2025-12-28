@@ -241,7 +241,54 @@ All standard Kysely operations are supported:
 - ❌ Cursors
 - ❓ Database-specific advanced features
 
-For comprehensive examples and test coverage, run `bun test` or refer to `tests/bun-sql.test.ts`
+## Testing
+
+This package includes comprehensive test coverage across all supported databases:
+
+- **SQLite**: 27 tests ✓
+- **PostgreSQL**: 27 tests ✓
+- **MySQL**: 27 tests ✓
+- **Total**: 81 integration tests
+
+### Test Coverage
+
+Each database has tests for:
+
+1. **Table Creation** - Schema validation and error handling
+2. **CRUD Operations**:
+   - Create (INSERT) - single and multiple records
+   - Read (SELECT) - basic queries, filtering, joins
+   - Update (UPDATE) - single and multiple records
+   - Delete (DELETE) - single and multiple records
+3. **Transaction Operations** - commit and rollback scenarios
+4. **Raw SQL** - parameterized queries and SQL execution
+5. **Complex Queries** - joins, aggregation, pagination, ordering, filtering
+
+### Running Tests
+
+Run all tests:
+```bash
+bun test
+```
+
+Run tests for a specific database:
+```bash
+# SQLite tests only
+bun test --test-name-pattern SQLite
+
+# PostgreSQL tests only
+bun test --test-name-pattern PostgreSQL
+
+# MySQL tests only
+bun test --test-name-pattern MySQL
+```
+
+Run with extended timeout for slower connections:
+```bash
+bun test --timeout 15000
+```
+
+For comprehensive examples and test implementations, refer to [tests/bun-sql.test.ts](tests/bun-sql.test.ts)
 
 ## Type Safety
 
@@ -310,7 +357,29 @@ bunx biome format --write src/
 
 # Lint code
 bunx biome lint --fix src/
+
+# Run tests
+bun test
+
+# Run tests for specific database
+bun test --test-name-pattern PostgreSQL
 ```
+
+### Test Setup
+
+Tests require Docker containers for PostgreSQL and MySQL. SQLite tests use in-memory databases.
+
+Before running tests, ensure Docker is running:
+
+```bash
+# Start containers
+docker compose up -d
+
+# Stop containers
+docker compose down
+```
+
+The test setup automatically creates and drops test tables, so no manual database setup is required beyond running Docker.
 
 ## References
 

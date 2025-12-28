@@ -1,4 +1,4 @@
-import type { SQL } from "bun";
+import type { ReservedSQL, SQL } from "bun";
 import {
 	CompiledQuery,
 	type DatabaseConnection,
@@ -14,6 +14,8 @@ import {
 export class BunSQLDriver implements Driver {
 	readonly #database: SQL;
 
+	#connection?: ReservedSQL;
+
 	constructor(database: SQL) {
 		this.#database = database;
 	}
@@ -23,7 +25,11 @@ export class BunSQLDriver implements Driver {
 	}
 
 	async acquireConnection(): Promise<DatabaseConnection> {
-		return new BunSQLConnection(this.#database);
+		if (this.#database.options.adapter === "sqlite") {
+			return new BunSQLConnection(this.#database);
+		}
+		this.#connection = await this.#database.reserve();
+		return new BunSQLConnection(this.#connection);
 	}
 
 	async beginTransaction(
@@ -56,7 +62,9 @@ export class BunSQLDriver implements Driver {
 	}
 
 	async releaseConnection(): Promise<void> {
-		// Bun SQL handles connection pooling automatically
+		if (this.#connection) {
+			this.#connection.release();
+		}
 	}
 
 	async destroy(): Promise<void> {
@@ -69,9 +77,9 @@ export class BunSQLDriver implements Driver {
  * Handles query execution and result mapping
  */
 class BunSQLConnection implements DatabaseConnection {
-	readonly #db: SQL;
+	readonly #db: ReservedSQL | SQL;
 
-	constructor(db: SQL) {
+	constructor(db: ReservedSQL | SQL) {
 		this.#db = db;
 	}
 

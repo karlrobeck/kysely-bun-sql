@@ -1,16 +1,66 @@
 {
-  "name": "kysely-bun-sql",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@biomejs/biome": "2.3.10",
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "kysely": "^0.28.9"
-  }
+	"name": "@karlrobeck/kysely-bun-sql",
+	"version": "0.1.0",
+	"description": "A Kysely dialect driver for Bun's native SQL runtime, providing type-safe database access for PostgreSQL, MySQL, and SQLite databases.",
+	"author": "Karl Robeck Alferez",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/karlrobeck/kysely-bun-sql"
+	},
+	"keywords": [
+		"kysely",
+		"bun",
+		"sql",
+		"postgresql",
+		"mysql",
+		"sqlite",
+		"database",
+		"type-safe",
+		"query-builder"
+	],
+	"type": "module",
+	"module": "dist/index.js",
+	"main": "dist/index.js",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
+		"./config": {
+			"types": "./dist/config.d.ts",
+			"default": "./dist/config.js"
+		},
+		"./dialect": {
+			"types": "./dist/dialect.d.ts",
+			"default": "./dist/dialect.js"
+		},
+		"./driver": {
+			"types": "./dist/driver.d.ts",
+			"default": "./dist/driver.js"
+		}
+	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"README.md"
+	],
+	"scripts": {
+		"build": "bun build ./src/index.ts --outdir dist --splitting",
+		"build:watch": "bun build ./src/index.ts --outdir dist --splitting --watch",
+		"prepublishOnly": "bun run build && bun run test",
+		"test": "bun test",
+		"lint": "biome lint src tests",
+		"format": "biome format src tests --write"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.3.10",
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"kysely": "^0.28.9"
+	}
 }
