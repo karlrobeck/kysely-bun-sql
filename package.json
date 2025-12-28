@@ -23,22 +23,7 @@
 	"module": "dist/index.js",
 	"main": "dist/index.js",
 	"exports": {
-		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
-		},
-		"./config": {
-			"types": "./dist/config.d.ts",
-			"default": "./dist/config.js"
-		},
-		"./dialect": {
-			"types": "./dist/dialect.d.ts",
-			"default": "./dist/dialect.js"
-		},
-		"./driver": {
-			"types": "./dist/driver.d.ts",
-			"default": "./dist/driver.js"
-		}
+		"./*": "./src/*"
 	},
 	"files": [
 		"dist",
