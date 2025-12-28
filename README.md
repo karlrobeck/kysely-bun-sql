@@ -229,9 +229,11 @@ All standard Kysely operations are supported:
 ## Supported Query Types
 
 **Legend:**
-- ✅ = Tested and verified
-- ❌ = Not supported
-- ❓ = Not tested
+> ✅ = Tested and verified
+
+> ❌ = Not supported
+
+> ❓ = Not tested
 
 - ✅ SELECT
 - ✅ INSERT (with RETURNING for PostgreSQL and MySQL)
