@@ -38,7 +38,7 @@
 		"build": "bun build ./src/index.ts --outdir dist --splitting",
 		"build:watch": "bun build ./src/index.ts --outdir dist --splitting --watch",
 		"prepublishOnly": "bun run build && bun run test",
-		"test": "bun test",
+		"test": "bun test --preload ./tests/setup.ts",
 		"lint": "biome lint src tests",
 		"format": "biome format src tests --write"
 	},

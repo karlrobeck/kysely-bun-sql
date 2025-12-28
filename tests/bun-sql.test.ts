@@ -62,13 +62,16 @@ describe("PostgreSQL", () => {
 	beforeAll(async () => {
 		db = createDatabase("postgres");
 
+		// Drop existing tables if they exist
+		await db.schema.dropTable("posts").ifExists().execute().catch(() => {});
+		await db.schema.dropTable("users").ifExists().execute().catch(() => {});
+
 		// Create tables
 		await db.schema
 			.createTable("users")
-			.ifNotExists()
 			.addColumn("id", "serial", (col) => col.primaryKey().notNull())
 			.addColumn("name", "varchar(255)", (col) => col.notNull())
-			.addColumn("email", "varchar(255)", (col) => col.notNull())
+			.addColumn("email", "varchar(255)", (col) => col.notNull().unique())
 			.addColumn("createdAt", "timestamp", (col) =>
 				col.defaultTo(sql`CURRENT_TIMESTAMP`),
 			)
@@ -76,7 +79,6 @@ describe("PostgreSQL", () => {
 
 		await db.schema
 			.createTable("posts")
-			.ifNotExists()
 			.addColumn("id", "serial", (col) => col.primaryKey().notNull())
 			.addColumn("userId", "integer", (col) => col.notNull())
 			.addColumn("title", "varchar(255)", (col) => col.notNull())
@@ -294,13 +296,13 @@ describe("PostgreSQL", () => {
 			await db
 				.updateTable("users")
 				.where("name", "like", "%User%")
-				.set({ email: "updated@example.com" })
+				.set({ name: "UpdatedUser" })
 				.execute();
 
 			const users = await db
 				.selectFrom("users")
 				.selectAll()
-				.where("email", "=", "updated@example.com")
+				.where("name", "=", "UpdatedUser")
 				.execute();
 
 			expect(users.length).toBe(2);
@@ -584,15 +586,18 @@ describe("MySQL", () => {
 	beforeAll(async () => {
 		db = createDatabase("mysql");
 
+		// Drop existing tables if they exist
+		await db.schema.dropTable("posts").ifExists().execute().catch(() => {});
+		await db.schema.dropTable("users").ifExists().execute().catch(() => {});
+
 		// Create tables
 		await db.schema
 			.createTable("users")
-			.ifNotExists()
 			.addColumn("id", "integer", (col) =>
 				col.primaryKey().autoIncrement().notNull(),
 			)
 			.addColumn("name", "varchar(255)", (col) => col.notNull())
-			.addColumn("email", "varchar(255)", (col) => col.notNull())
+			.addColumn("email", "varchar(255)", (col) => col.notNull().unique())
 			.addColumn("createdAt", "timestamp", (col) =>
 				col.defaultTo(sql`CURRENT_TIMESTAMP`),
 			)
@@ -600,7 +605,6 @@ describe("MySQL", () => {
 
 		await db.schema
 			.createTable("posts")
-			.ifNotExists()
 			.addColumn("id", "integer", (col) =>
 				col.primaryKey().autoIncrement().notNull(),
 			)
@@ -852,13 +856,13 @@ describe("MySQL", () => {
 			await db
 				.updateTable("users")
 				.where("name", "like", "%User%")
-				.set({ email: "updated@example.com" })
+				.set({ name: "UpdatedUser" })
 				.execute();
 
 			const users = await db
 				.selectFrom("users")
 				.selectAll()
-				.where("email", "=", "updated@example.com")
+				.where("name", "=", "UpdatedUser")
 				.execute();
 
 			expect(users.length).toBe(2);
