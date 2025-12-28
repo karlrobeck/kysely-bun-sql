@@ -1,1 +1,1 @@
-import { BunSQLDialect } from "@karlrobeck/kysely-bun-sql/index.ts";
+import { BunSQLDialect } from "@karlrobeck/kysely-bun-sql";
