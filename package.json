@@ -1,0 +1,16 @@
+{
+  "name": "kysely-bun-sql",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@biomejs/biome": "2.3.10",
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "kysely": "^0.28.9"
+  }
+}
