@@ -21,6 +21,13 @@ A Kysely dialect driver for Bun's native SQL runtime, providing type-safe databa
 ## Installation
 
 ```bash
+bun install https://github.com/karlrobeck/kysely-bun-sql@0.1.0
+bun add kysely
+```
+
+Or install from the latest main branch:
+
+```bash
 bun install https://github.com/karlrobeck/kysely-bun-sql
 bun add kysely
 ```
