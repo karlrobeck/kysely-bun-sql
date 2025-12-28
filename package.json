@@ -31,6 +31,9 @@
 		"LICENSE",
 		"README.md"
 	],
+	"workspaces": [
+		"examples/*"
+	],
 	"scripts": {
 		"build": "bun build ./src/index.ts --outdir dist --splitting",
 		"build:watch": "bun build ./src/index.ts --outdir dist --splitting --watch",

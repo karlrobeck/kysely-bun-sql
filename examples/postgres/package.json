@@ -1,12 +1,16 @@
 {
-  "name": "postgres",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  }
+	"name": "postgres-example",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"dependencies": {
+		"@karlrobeck/kysely-bun-sql": "../../",
+		"kysely": "^0.28.9"
+	},
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	}
 }

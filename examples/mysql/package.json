@@ -1,15 +1,16 @@
 {
-  "name": "mysql",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "kysely": "^0.28.9"
-  }
+	"name": "mysql-example",
+	"module": "index.ts",
+	"type": "module",
+	"private": true,
+	"devDependencies": {
+		"@types/bun": "latest"
+	},
+	"peerDependencies": {
+		"typescript": "^5"
+	},
+	"dependencies": {
+		"@karlrobeck/kysely-bun-sql": "../../",
+		"kysely": "^0.28.9"
+	}
 }
