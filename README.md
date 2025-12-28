@@ -241,6 +241,8 @@ All standard Kysely operations are supported:
 - ❌ Cursors
 - ❓ Database-specific advanced features
 
+For comprehensive examples and test coverage, run `bun test` or refer to `tests/bun-sql.test.ts`
+
 ## Type Safety
 
 Full TypeScript support with Kysely's compile-time type checking:
